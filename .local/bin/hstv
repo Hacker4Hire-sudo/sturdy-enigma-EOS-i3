@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# --- CONFIGURATION ---
+PLAYLIST="$HOME/Music/IPTV/playlist.m3u"
+REC_DIR="$HOME/Videos/Recordings"
+USER_AGENT="Mozilla/5.0"
+
+# Ensure recording directory exists
+mkdir -p "$REC_DIR"
+
+if [ ! -f "$PLAYLIST" ]; then
+    echo -e "\e[1;31mError: Playlist not found at $PLAYLIST\e[0m"
+    exit 1
+fi
+
+# --- 1. CHANNEL SELECTION ---
+# This gathers the channel names and URLs, then lets you pick one via fzf
+SELECTED=$(grep -E '^#EXTINF' -A 1 "$PLAYLIST" | \
+    paste - - | \
+    tr -d '\r' | \
+    sed 's/#EXTINF:.*,//' | \
+    fzf --height 40% --reverse --header='[ENTER] Watch | [CTRL-C] Cancel' --border)
+
+# Exit if nothing was selected (e.g., you pressed Esc)
+[ -z "$SELECTED" ] && exit 0
+
+# --- 2. URL RECONSTRUCTION ---
+# This cleans the URL and adds the /live/ path and .ts extension for EndeavourOS compatibility
+URL=$(echo "$SELECTED" | awk '{
+    url = $NF; 
+    if (url ~ /:8080\// && url !~ /\/live\//) {
+        gsub(/:8080\//, ":8080/live/", url);
+    }
+    if (url ~ /[0-9]$/ && url !~ /\.ts$/) {
+        url = url ".ts"
+    }
+    print url
+}')
+
+# --- 3. ACTION CHOICE ---
+echo -e "\e[1;36mTarget Acquired: $URL\e[0m"
+read -p "Select Action: (W)atch, (R)ecord, or (I)nfinite Loop? [W/r/i]: " ACTION
+ACTION=${ACTION:-W}
+
+case "$ACTION" in
+    [Rr]*)
+        # RECORDING MODE
+        FILENAME="Stream_$(date +%Y%m%d_%H%M%S).ts"
+        echo -e "\e[1;31mRecording to $REC_DIR/$FILENAME...\e[0m"
+        mpv --no-video --user-agent="$USER_AGENT" "$URL" \
+            --stream-record="$REC_DIR/$FILENAME" \
+            --stream-lavf-o=reconnect=1,reconnect_streamed=1,reconnect_delay_max=5
+        ;;
+    [Ii]*)
+        # INFINITE LOOP MODE (For unstable streams)
+        echo -e "\e[1;33mEntering Infinite Loop. Press Ctrl+C in this terminal to kill.\e[0m"
+        while true; do
+            mpv --no-ytdl --user-agent="$USER_AGENT" "$URL" \
+                --cache=yes --demuxer-max-bytes=500M \
+                --stream-lavf-o=reconnect=1,reconnect_streamed=1,reconnect_delay_max=5
+            echo -e "\e[1;31mStream dropped. Reconnecting in 3 seconds...\e[0m"
+            sleep 3
+        done
+        ;;
+    *)
+        # STANDARD WATCH MODE (With hardened flags)
+        echo -e "\e[1;32mOpening Stream (Hardened Mode)...\e[0m"
+        mpv --no-ytdl --user-agent="$USER_AGENT" "$URL" \
+            --cache=yes \
+            --demuxer-max-bytes=500M \
+            --demuxer-max-back-bytes=100M \
+            --stream-lavf-o=reconnect=1,reconnect_streamed=1,reconnect_delay_max=5 \
+            --keep-open=yes
+        ;;
+esac

@@ -1,0 +1,12 @@
+#!/bin/bash
+USER="A1Jay5"
+PASS="362586"
+HOST="http://xxip9.top:8080"
+ID=$1
+[[ -z "$ID" ]] && exit 1
+RESPONSE=$(curl -s "${HOST}/player_api.php?username=${USER}&password=${PASS}&action=get_short_epg&stream_id=${ID}")
+echo "$RESPONSE" | python3 -c "import sys, json, base64; 
+data=json.load(sys.stdin); 
+for p in data.get('epg_listings', []):
+    title = base64.b64decode(p['title']).decode('utf-8')
+    print(f'\033[1;32m{p[\"start\"].split(\" \")[1]}\033[0m - {title}')"

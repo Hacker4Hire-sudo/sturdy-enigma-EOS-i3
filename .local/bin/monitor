@@ -1,0 +1,15 @@
+#!/bin/bash
+TIME=$(date +'%I:%M:%p')
+TEMP=$(sensors | grep "Core 0" | awk '{print $3}' | tr -d '+')
+CPU_LOAD=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+MEM=$(free -m | awk '/Mem:/ { printf("%.2fGB / %.2fGB (%.1f%%)", $3/1024, $2/1024, $3/$2*100) }')
+SWAP=$(free -m | awk '/Swap:/ { printf("%.2fGB / %.2fGB (%.1f%%)", $3/1024, $2/1024, ($2 > 0 ? $3/$2*100 : 0)) }')
+# Accurate SSD Math
+DISK=$(df -h / | awk 'NR==2 {printf "%s / %s (%.0f%% Free)", $4, $2, ($4/($3+$4)*100)}')
+
+echo -e "--- 🖥️  Brother Rodney's Command Center [$TIME] ---"
+echo -e "🌡️  CPU Temp:   $TEMP"
+echo -e "⚡ CPU Usage:  $CPU_LOAD%"
+echo -e "🧠 RAM Used:   $MEM"
+echo -e "🚀 ZRAM/Swap:  $SWAP"
+echo -e "💾 SSD Avail:  $DISK"

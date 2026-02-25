@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import os
+import sys
+from anthropic import Anthropic
+
+# Your official station key (Loaded from environment)
+API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+
+def ask_claude(prompt):
+    if not API_KEY:
+        print("\n\033[1;31m[ERROR]:\033[0m ANTHROPIC_API_KEY environment variable not set.")
+        return
+    try:
+        client = Anthropic(api_key=API_KEY)
+        message = client.messages.create(
+            model="claude-3-5-sonnet-20240620",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        print(f"\n\033[1;35m[CLAUDE]:\033[0m {message.content[0].text}")
+    except Exception as e:
+        print(f"\n\033[1;31m[ERROR]:\033[0m {e}")
+
+if __name__ == "__main__":
+    query = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else input("🔍 Ask Claude: ")
+    if query:
+        ask_claude(query)

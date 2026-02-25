@@ -1,0 +1,63 @@
+/*******************************************************
+ * ROFI configs i3 powermenu for Brother Rodney
+ * Modified for visibility and centering
+ *******************************************************/
+configuration {
+    /* Pumping font to 18 and enabling icons */
+    font:            "JetBrainsMono Nerd Font 18";
+    show-icons:      true;
+    icon-theme:      "Papirus-Dark";
+    scroll-method:   0;
+    disable-history: false;
+    sidebar-mode:    false;
+}
+
+@import "~/.config/rofi/config.rasi"
+
+window {
+    background-color: @background;
+    border:           2px;
+    border-radius:    15px;      /* Rounded edges */
+    padding:          25px;      /* More room inside */
+    transparency:     "real";
+    
+    /* Center it and make it wide enough to read */
+    width:            300px;     /* Increased from 120px */
+    location:         center;
+    anchor:           center;
+    x-offset:         0;
+    y-offset:         0;
+}
+
+listview {
+    lines:           7;
+    columns:         1;
+    scrollbar:       false;
+    spacing:         15px;       /* Space between buttons */
+}
+
+element {
+    border:          0;
+    padding:         10px;       /* Bigger clickable area */
+    border-radius:   8px;
+}
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+    vertical-align:   0.5;
+}
+
+element-icon {
+    size:            40px;       /* Large power icons */
+    padding:         0 15px 0 0;
+}
+
+/* Maintain original color behaviors */
+element.normal.normal { background-color: @normal-background; text-color: @normal-foreground; }
+element.selected.normal { background-color: @selected-normal-background; text-color: @selected-normal-foreground; }
+
+/* Keep the rest of the file clean by only showing the list */
+mainbox {
+  children: [listview];
+}

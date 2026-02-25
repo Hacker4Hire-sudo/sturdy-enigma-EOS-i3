@@ -1,0 +1,11 @@
+#!/bin/bash
+# Check all policy governors
+if grep -q "performance" /sys/devices/system/cpu/cpufreq/policy*/scaling_governor; then
+    echo "🚀 TURBO"
+    echo "" # Short text
+    echo "#ff5555" # Red color for Turbo
+else
+    echo "🧊 COOL"
+    echo "" # Short text
+    echo "#50fa7b" # Green color for Cool
+fi
