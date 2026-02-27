@@ -2,6 +2,13 @@
 
 Welcome to the **Hacking Station** configuration repository. This is a highly optimized, lean, and mean dotfiles setup tailored for an EndeavourOS / Arch Linux environment running the i3 window manager with 4GB of RAM.
 
+## 🖼️ Screenshots
+
+| ![Screen 1](screenshots/screen1.png) | ![Screen 2](screenshots/screen2.png) |
+|:---:|:---:|
+| ![Screen 3](screenshots/screen3.png) | ![Screen 4](screenshots/screen4.png) |
+| ![Screen 5](screenshots/screen5.png) | ![Screen 6](screenshots/scrreen.png) |
+
 ## 🚀 Features
 
 - **Blazing Fast i3 setup** tailored for performance.
@@ -16,7 +23,7 @@ Welcome to the **Hacking Station** configuration repository. This is a highly op
 
 1. Clone this repository into your home directory:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+   git clone https://github.com/Hacker4Hire-sudo/sturdy-enigma-EOS-i3.git ~/dotfiles
    ```
 2. Navigate to the directory:
    ```bash
