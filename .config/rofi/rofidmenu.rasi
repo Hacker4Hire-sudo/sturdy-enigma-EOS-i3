@@ -3,7 +3,7 @@
  * Maintainer: joekamprad [joekamprad //a_t// endeavouros.com]
  *******************************************************/
 configuration {
-    font:                "Noto Sans Regular 10";
+    font:                "Noto Sans Regular 14";
     show-icons:          true;
     icon-theme:          "Qogir";
     display-drun:        "Apps";
@@ -20,6 +20,7 @@ window {
     background-color: @background;
     border:           0;
     padding:          30;
+    transparency:     "real";
 }
 listview {
     lines:   10;
@@ -47,11 +48,17 @@ listview {
 }
 element {
     border:  0;
-    padding: 1px;
+    padding: 8px;
+    spacing: 12px;
+}
+element-icon {
+    size:             48px;
+    background-color: inherit;
 }
 element-text {
     background-color: inherit;
     text-color:       inherit;
+    vertical-align:   0.5;
 }
 element.normal.normal {
     background-color: @normal-background;

@@ -1,0 +1,50 @@
+#!/bin/bash
+# Gemini API CLI - Brother Rodney's Bulletproof Edition
+API_KEY="AIzaSyCXHwDxzKwQr1MZlO0W7zttT832u3g6CLQ"
+
+if [[ -z "$1" ]]; then
+    echo "Usage: ask \"your question\""
+    exit 1
+fi
+
+# Attempt the request up to 3 times if the server is busy
+for i in {1..3}; do
+RESPONSE=$(curl -s -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}" \
+    -H "Content-Type: application/json" \
+    -d "{\"contents\": [{\"parts\":[{\"text\": \"$*\"}]}]}")
+
+    # If it's not a 503 error, break the loop and process
+    if [[ ! "$RESPONSE" == *"503"* ]]; then
+        break
+    fi
+    echo "Server busy... retrying in 10s (Attempt $i/3)"
+    sleep 10
+done
+
+# Extraction - Deep search for 'text' key to stop the blank responses
+echo "$RESPONSE" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    # Recursively look for the 'text' key
+    def find_text(obj):
+        if isinstance(obj, dict):
+            if 'text' in obj: return obj['text']
+            for v in obj.values():
+                res = find_text(v)
+                if res: return res
+        elif isinstance(obj, list):
+            for item in obj:
+                res = find_text(item)
+                if res: return res
+        return None
+
+    result = find_text(data)
+    if result:
+        print(result)
+    else:
+        print('--- RAW DATA (No Text Found) ---')
+        print(json.dumps(data, indent=2))
+except Exception as e:
+    print(f'Critical Parser Error: {e}')
+"

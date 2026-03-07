@@ -6,7 +6,7 @@
 # --- Aliases & Paths ---
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-alias music='xfce4-terminal --title=ncmpcpp --command=ncmpcpp'
+alias music='xfce4-terminal --title ncmpcpp --command ncmpcpp'
 source ~/.env
 alias workmode='protonvpn-app & study'
 alias vibe='~/AI/toggle_voice.sh'
@@ -56,7 +56,7 @@ full() {
 }
 
 # --- Media Session Optimizations (2026) ---
-export TERMV_DEFAULT_MPV_FLAGS="--hwdec=vaapi --cache=yes --demuxer-max-bytes=150M --stream-lavf-o=reconnect=1,reconnect_at_eof=1,reconnect_streamed=1"
+export TERMV_DEFAULT_MPV_FLAGS="--hwdec=vaapi --no-ytdl --cache=yes --cache-pause=yes --demuxer-thread=yes --demuxer-max-bytes=256MiB --demuxer-readahead-secs=120 --stream-lavf-o=reconnect=1,reconnect_streamed=1,reconnect_delay_max=5"
 alias mpv="mpv --hwdec=vaapi"
 
 export PATH="$HOME/.local/bin:$PATH"
@@ -105,26 +105,6 @@ alias vbg='cmatrix -C cyan -b'
 alias matrix='cmatrix -C cyan -b'
 alias toggle-bg='echo "Live wallpaper disabled. Use '\''matrix'\'' for terminal visualizer."'
 
-tv() {
-    local SELECTION=$(grep "#EXTINF" ~/Music/IPTV/playlist.m3u | cut -d"," -f2- | fzf \
-        --height 80% \
-        --reverse \
-        --border \
-        --prompt="📺 Station Search: " \
-        --header="[CTRL-J/K to Scroll | ENTER to Play]" \
-        --preview "echo {} | awk -F': ' '{print \$NF}' | xargs -I % ~/.local/bin/guide %" \
-        --preview-window "right:45%:border-left" \
-    )
-
-    [ -z "$SELECTION" ] && return
-
-    local ID=$(echo "$SELECTION" | awk -F': ' '{print $NF}' | tr -d ' ')
-    local NAME=$(echo "$SELECTION" | cut -d':' -f1)
-
-    echo -e "\n\e[1;32mLaunching Stream: $NAME (ID: $ID)...\e[0m"
-    mpv --user-agent="TiviMate/5.0.0 (Linux; Android 11)" "http://xxip9.top:8080/live/A1Jay5/362586/${ID}.ts"
-}
-
 # --- The Master Brain (Architect Integrated) ---
 brain() {
     local opt=$1
@@ -163,3 +143,8 @@ brain() {
         esac
     done
 }
+alias update='~/.local/bin/intel-update.sh'
+alias tv='xfce4-terminal --title "Fred TV" --command "/home/hacker4hire/.config/i3/scripts/tv_launcher.sh"'
+alias upgrade-gemini='sudo npm install -g @google/gemini-cli@latest'
+source ~/.bash_brain
+export BROWSER=google-chrome-stable

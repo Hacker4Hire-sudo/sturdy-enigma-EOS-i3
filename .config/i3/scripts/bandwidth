@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+INTERFACE=$(ip route | awk '/^default via/ {print $5; exit}')
+if [ -z "$INTERFACE" ]; then
+    INTERFACE=$(ls /sys/class/net | grep -v lo | head -n 1)
+fi
+
+# Use /dev/shm for temporary storage to reduce disk I/O and handle reboots
+CACHE_FILE="/dev/shm/i3blocks_bandwidth_$INTERFACE"
+
+# Read previous values
+if [ -f "$CACHE_FILE" ]; then
+    read old_rx old_tx old_time < "$CACHE_FILE"
+else
+    old_rx=0
+    old_tx=0
+    old_time=0
+fi
+
+# Get current values
+line=$(grep "^[ ]*$INTERFACE:" /proc/net/dev)
+curr_rx=$(echo "$line" | awk '{print $2}')
+curr_tx=$(echo "$line" | awk '{print $10}')
+curr_time=$(date +%s)
+
+# Save current values for next run
+echo "$curr_rx $curr_tx $curr_time" > "$CACHE_FILE"
+
+# Calculate speed
+if [ "$old_time" -gt 0 ]; then
+    dt=$((curr_time - old_time))
+    if [ "$dt" -gt 0 ]; then
+        rx_speed=$(((curr_rx - old_rx) / dt))
+        tx_speed=$(((curr_tx - old_tx) / dt))
+    else
+        rx_speed=0
+        tx_speed=0
+    fi
+else
+    rx_speed=0
+    tx_speed=0
+fi
+
+# Function to format speed
+format_speed() {
+    local speed=$1
+    if [ "$speed" -lt 1024 ]; then
+        echo "${speed}B/s"
+    elif [ "$speed" -lt 1048576 ]; then
+        echo "$((speed / 1024))K/s"
+    else
+        echo "$((speed / 1048576))M/s"
+    fi
+}
+
+RX_F=$(format_speed $rx_speed)
+TX_F=$(format_speed $tx_speed)
+
+echo "<span color='#91ddff'>󰇚 $RX_F</span> <span color='#ff79c6'>󰕒 $TX_F</span>"
