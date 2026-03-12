@@ -1,4 +1,4 @@
-# exec --no-startup-id ~/set_once.sh
+# exec ~/set_once.sh
 # This file is a modified version based on default i3-config-wizard config
 # source is available here:
 # https://raw.githubusercontent.com/endeavouros-team/endeavouros-i3wm-setup/main/etc/skel/.config/i3/config
@@ -20,13 +20,20 @@
 #######################
 
 # Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
+# is used in the bar { 
+# swaybar_command swaybar} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango: Noto Sans Regular 12
 
 # set the mod key to the winkey:
 set $mod Mod4
+
+input * {
+    tap enabled
+    natural_scroll enabled
+}
+
 
 #####################
 # workspace layout: #
@@ -56,7 +63,6 @@ new_window pixel 3
 # Set inner/outer gaps
 gaps inner 6
 gaps outer 3
-gaps top 60
 
 # show window title bars (not officially supported with i3gaps)
 #default_border normal
@@ -173,21 +179,21 @@ bindcode $mod+Shift+90   move container to workspace  $ws10
 ######################################
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id xfce4-terminal
+bindsym $mod+Return exec xfce4-terminal
 
 # kill focused window
 bindsym $mod+q kill
 
 # exit-menu
-bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/powermenu
+bindsym $mod+Shift+e exec ~/.config/i3/scripts/powermenu
 
 # Lock the system
 # lock with a picture:
-#bindsym $mod+l exec --no-startup-id i3lock -i  ~/.config/i3/i3-lock-screen.png -p default|win -t
+#bindsym $mod+l exec i3lock -i  ~/.config/i3/i3-lock-screen.png -p default|win -t
 # lock by blurring the screen:
-bindsym $mod+l exec --no-startup-id ~/.config/i3/scripts/blur-lock
+bindsym $mod+l exec ~/.config/i3/scripts/blur-lock
 # lock in case after sleep
-exec --no-startup-id xss-lock -l ~/.config/i3/scripts/blur-lock
+# exec xss-lock -l ~/.config/i3/scripts/blur-lock
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -196,27 +202,27 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 # keybinding in fancy rofi (automated):
-bindsym F1 exec --no-startup-id ~/.config/i3/scripts/keyhint-2
+bindsym F1 exec ~/.config/i3/scripts/keyhint-2
 # alternative
 # keybinding list in editor:
-# bindsym $mod+F1 exec --no-startup-id xed ~/.config/i3/keybindings
+# bindsym $mod+F1 exec xed ~/.config/i3/keybindings
 
 # Backlight control
-#bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight +10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
-#bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
+#bindsym XF86MonBrightnessUp exec xbacklight +10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
+#bindsym XF86MonBrightnessDown exec xbacklight -10 && notify-send "Brightness - $(xbacklight -get | cut -d '.' -f 1)%"
 # Backlight setting using dunst osc
-bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh brightness_up
-bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh brightness_down
+bindsym XF86MonBrightnessUp exec ~/.config/i3/scripts/volume_brightness.sh brightness_up
+bindsym XF86MonBrightnessDown exec ~/.config/i3/scripts/volume_brightness.sh brightness_down
 
 # alternative screen & keyboard brightness setting with brightnessctl using dunst osc
 # install brightnessctl (sudo pacman -S brightnessctl)
 # keyboard backlight setting using brightnessctl
-#bindsym Mod1+space       exec --no-startup-id ~/.config/i3/scripts/volume_brightness2.sh keyboard_brightness_up
-#bindsym Mod1+Shift+space exec --no-startup-id ~/.config/i3/scripts/volume_brightness2.sh keyboard_brightness_down
+#bindsym Mod1+space       exec ~/.config/i3/scripts/volume_brightness2.sh keyboard_brightness_up
+#bindsym Mod1+Shift+space exec ~/.config/i3/scripts/volume_brightness2.sh keyboard_brightness_down
 #
 # screen brightness setting using brightnessctl
-#bindsym XF86MonBrightnessUp   exec --no-startup-id ~/.config/i3/scripts/volume_brightness2.sh screen_brightness_up
-#bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/volume_brightness2.sh screen_brightness_down
+#bindsym XF86MonBrightnessUp   exec ~/.config/i3/scripts/volume_brightness2.sh screen_brightness_up
+#bindsym XF86MonBrightnessDown exec ~/.config/i3/scripts/volume_brightness2.sh screen_brightness_down
 
 # change focus
 bindsym $mod+j focus left
@@ -266,47 +272,47 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # open new empty workspace
-bindsym $mod+Shift+n exec --no-startup-id ~/.config/i3/scripts/empty_workspace
+bindsym $mod+Shift+n exec ~/.config/i3/scripts/empty_workspace
 
 # Multimedia Keys
 
 # volume
 # use meta keys without showing osc
-#bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 5%+ && pkill -RTMIN+1 i3blocks
-#bindsym XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 5%- && pkill -RTMIN+1 i3blocks
+#bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+ && pkill -RTMIN+1 i3blocks
+#bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%- && pkill -RTMIN+1 i3blocks
 # use meta keys showing osc using dunst
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh volume_up
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh volume_down
+bindsym XF86AudioRaiseVolume exec ~/.config/i3/scripts/volume_brightness.sh volume_up
+bindsym XF86AudioLowerVolume exec ~/.config/i3/scripts/volume_brightness.sh volume_down
 
 # gradular volume control
-bindsym $mod+XF86AudioRaiseVolume exec --no-startup-id amixer -D pulse sset Master 1%+ && pkill -RTMIN+1 i3blocks
-bindsym $mod+XF86AudioLowerVolume exec --no-startup-id amixer -D pulse sset Master 1%- && pkill -RTMIN+1 i3blocks
+bindsym $mod+XF86AudioRaiseVolume exec amixer -D pulse sset Master 1%+ && pkill -RTMIN+1 i3blocks
+bindsym $mod+XF86AudioLowerVolume exec amixer -D pulse sset Master 1%- && pkill -RTMIN+1 i3blocks
 
 # mute
-#bindsym XF86AudioMute exec --no-startup-id amixer sset Master toggle && killall -USR1 i3blocks
+#bindsym XF86AudioMute exec amixer sset Master toggle && killall -USR1 i3blocks
 # use meta keys showing osc using dunst
-bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh volume_mute
+bindsym XF86AudioMute exec ~/.config/i3/scripts/volume_brightness.sh volume_mute
 
 # mic mute toggle
 bindsym XF86AudioMicMute exec amixer sset Capture toggle
 
 # audio control
-bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPlay exec playerctl play-pause
 # Above line will also work for pausing
-bindsym XF86AudioNext exec --no-startup-id playerctl next
-bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 # toggle between audio devices for output
-bindsym $mod+p exec --no-startup-id ~/.config/i3/scripts/audio-device-switch
+bindsym $mod+p exec ~/.config/i3/scripts/audio-device-switch
 
 ## App shortcuts
-bindsym $mod+c exec --no-startup-id ~/scripts/config_launcher.sh
-bindsym $mod+w exec --no-startup-id /usr/bin/google-chrome-stable
-bindsym $mod+n exec --no-startup-id /usr/bin/thunar
-bindsym Print exec --no-startup-id scrot ~/%Y-%m-%d-%T-screenshot.png && notify-send "Screenshot saved to ~/$(date +"%Y-%m-%d-%T")-screenshot.png"
+bindsym $mod+c exec ~/scripts/config_launcher.sh
+bindsym $mod+w exec /usr/bin/firefox
+bindsym $mod+n exec /usr/bin/thunar
+bindsym Print exec scrot ~/%Y-%m-%d-%T-screenshot.png && notify-send "Screenshot saved to ~/$(date +"%Y-%m-%d-%T")-screenshot.png"
 
 # Power Profiles menu switcher (rofi)
-bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/power-profiles
+bindsym $mod+Shift+p exec ~/.config/i3/scripts/power-profiles
 
 ##########################################
 # configuration for workspace behaviour: #
@@ -315,7 +321,7 @@ bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/power-profiles
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1:"
-set $ws2 "2:"
+set $ws2 "2:"
 set $ws3 "3:"
 set $ws4 "4:"
 set $ws5 "5:"
@@ -336,14 +342,14 @@ set $ws10 "10"
 
 # bind program to workspace and focus to them on startup:
 assign [class="Xfce4-terminal"] $ws1
-assign [class="Google-chrome"] $ws2
+assign [class="(?i)firefox"] $ws2
 assign [class="Thunar"] $ws3
 assign [class="thunderbird"] $ws4
 assign [class="TelegramDesktop"] $ws5
 
 # automatic set focus new window if it opens on another workspace than the current:
 for_window [class=Xfce4-terminal] focus
-for_window [class="Google-chrome"] focus
+for_window [class=(?i)firefox] focus
 for_window [class=Thunar] focus
 for_window [class=Thunderbird] focus
 for_window [class=TelegramDesktop] focus
@@ -381,7 +387,6 @@ for_window [class="mpv"] floating enable, resize set 1000 800, move position cen
 
 # Centered floating music player - adjusted for laptop screen height
 for_window [title="ncmpcpp"] floating enable, resize set 800 600, move position center
-for_window [title="Fred TV"] floating enable, resize set 1200 800, move position center
 
 #############################################
 # autostart applications/services on login: #
@@ -404,106 +409,106 @@ exec_always $HOME/.config/i3/scripts/import-gsettings
 # install picom package (sudo pacman -Syu picom)
 
 # Optimized Picom with Rounded Corners & Shadows
-exec --no-startup-id picom --config ~/.config/picom/picom.conf -b
+# exec picom --config ~/.config/picom/picom.conf -b
 
 # for custom config:
-#exec_always --no-startup-id picom --config  ~/.config/picom.conf
+#exec_always picom --config  ~/.config/picom.conf
 
 
 ## applications/services
 
 # Hacking-Station Vocal Handshake
-exec --no-startup-id ~/AI/greeting.sh
+exec ~/AI/greeting.sh
 
 # Start the compositor
-exec --no-startup-id blueman-applet
+exec blueman-applet
 
 
 #get auth work with polkit-gnome
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 # dex execute .desktop files + apps using /etc/xdg/autostart.
 # when second to i3 a DE is installed or mixed usage of i3 + xfce4 or GNOME
 # in this cases better disable dex and use manual starting apps using xdg/autostart
 # if enabled you should comment welcome app.
 # https://github.com/jceb/dex
-#exec --no-startup-id dex -a -s /etc/xdg/autostart/:~/.config/autostart/
-exec --no-startup-id dex --autostart --environment i3
+#exec dex -a -s /etc/xdg/autostart/:~/.config/autostart/
+# exec dex --autostart --environment i3
 
 # start welcome app
-#exec --no-startup-id sh /usr/share/endeavouros/scripts/welcome --startdelay=3
+#exec sh /usr/share/endeavouros/scripts/welcome --startdelay=3
 
 # num lock activated
-#exec --no-startup-id numlockx on
+#exec numlockx on
 
 # configure multiple keyboard layouts and hotkey to switch (Alt+CAPSLOCK in this example)
-#exec --no-startup-id setxkbmap -layout 'us,sk' -variant altgr-intl,qwerty -option 'grp:alt_caps_toggle'
+#exec setxkbmap -layout 'us,sk' -variant altgr-intl,qwerty -option 'grp:alt_caps_toggle'
 
 # start conky:
-exec_always --no-startup-id conky
+exec_always conky
 
 # start a script to setup displays
 # uncomment the next line, use arandr to setup displays and save the file as monitor:
-exec --no-startup-id ~/.screenlayout/monitor.sh
+# exec ~/.screenlayout/monitor.sh
 
 # set wallpaper
-# exec --no-startup-id sleep 2 && nitrogen --restore
-# exec --no-startup-id sleep 1 && feh --bg-fill ~/Pictures/Tampa.jpg
-exec_always --no-startup-id ~/.fehbg
+# exec sleep 2 && nitrogen --restore
+# exec sleep 1 && feh --bg-fill ~/Pictures/Tampa.jpg
+output * bg /home/hacker4hire/Pictures/Cracked2.png fill
 
 # set powersavings for display:
-exec --no-startup-id xset s 480 dpms 600 600 600
+# exec xset s 480 dpms 600 600 600
 
 # disable power saving (for example if using xscreensaver)
-#exec --no-startup-id xset -dpms
+#exec xset -dpms
 
 # use xautolock to use autosuspend rules for mobile devices
 # https://wiki.archlinux.org/title/Session_lock#xautolock
-#exec --no-startup-id xautolock -time 60 -locker "systemctl suspend"
+#exec xautolock -time 60 -locker "systemctl suspend"
 
 
 # xscreensaver
 # https://www.jwz.org/xscreensaver
-#exec --no-startup-id xscreensaver --no-splash
+#exec xscreensaver --no-splash
 
 # Desktop notifications
 
 # dunst config used ~/.config/dunst/dunstrc
 # set alternative config if needed:
-#exec --no-startup-id /usr/bin/dunst --config ~/.config/dunst/dunstrc
+#exec /usr/bin/dunst --config ~/.config/dunst/dunstrc
 # may need to run dbus-launch explicitly:
-#exec --no-startup-id dbus-launch /usr/bin/dunst
-exec --no-startup-id /usr/bin/dunst
+#exec dbus-launch /usr/bin/dunst
+exec /usr/bin/dunst
 
 # alternative if you installed aside with XFCE4:
-# exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd &
+# exec /usr/lib/xfce4/notifyd/xfce4-notifyd &
 
 # autotiling script
 # https://github.com/nwg-piotr/autotiling
 # `pacman -Syu autotiling`
-#exec_always --no-startup-id autotiling
+#exec_always autotiling
 
 # Autostart apps as you like
-#exec --no-startup-id sleep 2 && xfce4-terminal
+#exec sleep 2 && xfce4-terminal
 
-exec --no-startup-id sleep 5 && systemctl --user restart mpd
-# exec --no-startup-id sleep 7 && firefox https://github.com/endeavouros-team/endeavouros-i3wm-setup/blob/main/force-knowledge.md
-#exec --no-startup-id sleep 3 && thunar
+exec sleep 5 && systemctl --user restart mpd
+# exec sleep 7 && firefox https://github.com/endeavouros-team/endeavouros-i3wm-setup/blob/main/force-knowledge.md
+#exec sleep 3 && thunar
 
 
 ## system tray
 
-# if you do not use dex: exec --no-startup-id dex --autostart --environment i3
+# if you do not use dex: # exec dex --autostart --environment i3
 # you need to have tray apps started manually one by one:
 
 # start blueberry app for managing bluetooth devices from tray:
-#exec --no-startup-id blueberry-tray
+#exec blueberry-tray
 
 # networkmanager-applet
-#exec --no-startup-id nm-applet
+#exec nm-applet
 
 # clipman-applet
-#exec --no-startup-id xfce4-clipman
+#exec xfce4-clipman
 
 ######################################
 # color settings for bar and windows #
@@ -535,8 +540,34 @@ client.urgent               $urgentred  $urgentred  $white      $yellowbrown    
 
 # Start i3bar to display a workspace bar
 # (plus the system information i3status finds out, if available)
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+bar { 
+ swaybar_command swaybar
+        font pango: Noto Sans Bold 13
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
+            position top
+#           i3bar_command i3bar --transparency
+# it could be that you have no primary display set: set one (xrandr --output <output> --primary)
+# reference: https://i3wm.org/docs/userguide.html#_tray_output
+            #tray_output primary
+            tray_padding 0
 
+# When strip_workspace_numbers is set to yes,
+# any workspace that has a name of the form
+# “[n][:][NAME]” will display only the name.
+strip_workspace_numbers yes
+##strip_workspace_name no
+
+            colors {
+            separator          $purple
+            background         $darkgrey
+            statusline         $white
+#                           border              bg          txt         indicator
+        focused_workspace   $mediumgrey         $grey       $darkgrey
+        active_workspace    $lightblue          $mediumgrey $darkgrey
+        inactive_workspace  $darkgrey           $darkgrey   $grey
+        urgent_workspace    $urgentred          $urgentred  $white
+    }
+}
 
 # you can add different bars for multidisplay setups on each display:
 # set output HDMI-0 to the display you want the bar, --transparency can be set.
@@ -544,7 +575,8 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 # https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4
 # #08052be6 --> e6=90%
 
-# bar {
+# bar { 
+# swaybar_command swaybar
 #   font pango: Noto Sans Regular 10
 #   status_command i3blocks -c ~/.config/i3/i3blocks-2.conf
 #   i3bar_command i3bar --transparency
@@ -574,18 +606,18 @@ exec_always --no-startup-id ~/.config/polybar/launch.sh
 #####################################
 
 ## rofi bindings fancy application menu
-bindsym $mod+d exec --no-startup-id rofi -show drun -config ~/.config/rofi/rofidmenu.rasi
+
+bindsym $mod+d exec rofi -modi drun -show drun \
+        -config ~/.config/rofi/rofidmenu.rasi
 
 ## rofi bindings for window menu
-bindsym $mod+t exec --no-startup-id rofi -show window -config ~/.config/rofi/rofidmenu.rasi
 
+bindsym $mod+t exec rofi -show window \
+        -config ~/.config/rofi/rofidmenu.rasi
 
 ## rofi bindings to manage clipboard (install rofi-greenclip from the AUR)
 
-#exec --no-startup-id greenclip daemon>/dev/null
-#bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard \
-#       -config ~/.config/rofi/rofidmenu.rasi
-exec --no-startup-id udiskie &
-bindsym $mod+Shift+f exec --no-startup-id xfce4-terminal -e 'bash -c "sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches; echo Memory Flushed; sleep 2"'
-exec --no-startup-id kdeconnect-indicator
-bindsym $mod+Shift+a exec --no-startup-id kdeconnect-app
+#exec greenclip daemon>/dev/null
+#bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard \
+#       -config ~/.config/rofi/rofidmenu.rasiexec udiskie &
+bindsym $mod+Shift+f exec terminal -e 'bash -c "sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches; echo Memory Flushed; sleep 2"'

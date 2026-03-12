@@ -56,7 +56,7 @@ full() {
 }
 
 # --- Media Session Optimizations (2026) ---
-export TERMV_DEFAULT_MPV_FLAGS="--hwdec=vaapi --no-ytdl --cache=yes --cache-pause=yes --demuxer-thread=yes --demuxer-max-bytes=256MiB --demuxer-readahead-secs=120 --stream-lavf-o=reconnect=1,reconnect_streamed=1,reconnect_delay_max=5"
+export TERMV_DEFAULT_MPV_FLAGS="--hwdec=vaapi --no-ytdl --cache=yes --cache-pause=yes --cache-pause-initial=yes --cache-pause-wait=15 --demuxer-thread=yes --demuxer-max-bytes=640MiB --demuxer-readahead-secs=400 --network-timeout=90 --user-agent='TiviMate/5.1.0 (Linux; Android 12)' --vd-lavc-fast --framedrop=vo --stream-lavf-o=reconnect=1,reconnect_at_eof=1,reconnect_streamed=1,reconnect_delay_max=5"
 alias mpv="mpv --hwdec=vaapi"
 
 export PATH="$HOME/.local/bin:$PATH"
@@ -82,6 +82,11 @@ if [[ $- == *i* ]]; then
     MEM_USAGE=$(awk '/MemTotal:/ {total=$2} /MemAvailable:/ {avail=$2} END {printf("%3.0f%%", (total-avail)/total*100)}' /proc/meminfo)
     CPU_TEMP=$(sensors | grep 'Core 0' | awk '{print $3}' | tr -d '+')
     printf "\e[1;36m🧠 Memory: %-4s | 🌡️  CPU: %-7s\e[0m\n" "$MEM_USAGE" "$CPU_TEMP"
+fi
+
+# --- Completion & History ---
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
 fi
 
 # --- Gemini AI Integration ---

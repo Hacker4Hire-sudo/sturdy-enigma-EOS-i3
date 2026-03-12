@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Log startup
+echo "Polybar launch started at $(date)" >> /tmp/polybar_launch.log
+
+# Terminate already running bar instances
+killall -q polybar
+
+# Wait until the processes have been shut down
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+
+# Give i3 a moment to settle
+sleep 1
+
+# Export hwmon path for temperature module
+export HWMON_PATH=$(find /sys/devices/platform/coretemp.0/hwmon -name temp1_input | head -n 1)
+
+# Launch bar
+polybar main -c ~/.config/polybar/config.ini &

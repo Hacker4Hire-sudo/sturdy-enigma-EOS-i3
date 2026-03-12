@@ -1,0 +1,7 @@
+model: gemini:gemini-3-flash-preview
+clients:
+  - type: gemini
+    api_key: "AIzaSyB69L5c8S-BR58sjVXWl_fbZLi1CtnzHbo"
+
+# This forces the model to acknowledge 2026 and use its internal search tools
+template: "The current date is Thursday, Feb 5, 2026. You are a technical assistant on an Arch Linux system. You MUST use your search capability to provide REAL-TIME weather and news. Never report data from 2024."

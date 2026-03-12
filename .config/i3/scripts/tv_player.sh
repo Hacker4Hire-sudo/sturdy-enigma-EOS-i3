@@ -24,15 +24,17 @@ echo "URL: $STREAM_URL" >> "$LOGFILE"
 # Hardened Live-Stream Flags
 FLAGS=(
     "--user-agent=TiviMate/5.1.0 (Linux; Android 12)"
-    "--network-timeout=20"
+    "--network-timeout=90"
     "--cache=yes"
-    "--demuxer-max-bytes=150MiB"
-    "--demuxer-max-back-bytes=50MiB"
-    "--demuxer-readahead-secs=45"
-    "--cache-pause=no"
+    "--demuxer-max-bytes=640MiB"
+    "--demuxer-max-back-bytes=256MiB"
+    "--demuxer-readahead-secs=400"
+    "--cache-pause=yes"
+    "--cache-pause-initial=yes"
+    "--cache-pause-wait=15"
     "--framedrop=vo"
     "--vd-lavc-fast"
-    "--stream-lavf-o=reconnect=1,reconnect_at_eof=1,reconnect_streamed=1,reconnect_delay_max=4,timeout=15000000"
+    "--stream-lavf-o=reconnect=1,reconnect_at_eof=1,reconnect_streamed=1,reconnect_delay_max=5,timeout=90000000"
 )
 
 # Kill previous Fred TV streams to avoid overlap

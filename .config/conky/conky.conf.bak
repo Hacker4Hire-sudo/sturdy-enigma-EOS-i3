@@ -1,0 +1,47 @@
+conky.config = {
+    alignment = 'top_left',
+    background = true,
+    cpu_avg_samples = 2,
+    default_color = '00FFFF', -- Cyan
+    color1 = '39FF14',       -- Neon Green
+    double_buffer = true,
+    draw_shades = false,
+    gap_x = 40,
+    gap_y = 60,
+    minimum_width = 450,
+    minimum_height = 800,    -- Increased height so it doesn't cut off
+    no_buffers = true,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'override',
+    own_window_transparent = true, -- Total Transparency
+    own_window_argb_visual = true,
+    own_window_argb_value = 0,    -- 0 means completely invisible background
+    update_interval = 1.0,
+    use_xft = true,
+    font = 'DejaVu Sans Mono:size=12',
+}
+
+conky.text = [[
+${color 00FFFF}${font DejaVu Sans Mono:bold:size=16}SYSTEM RESOURCES ${hr 2}${font}
+${voffset 10}${color 00FFFF}CPU Usage: $cpu% ${goto 180}${color1}${cpubar 10,250}
+${voffset 10}${color 00FFFF}RAM Usage: $memperc% ${goto 180}${color1}${membar 10,250}
+${voffset 10}${color 00FFFF}Swap Usage: $swapperc% ${goto 180}${color1}${swapbar 10,250}
+
+${voffset 20}${color 00FFFF}${font DejaVu Sans Mono:bold:size=16}FILE SYSTEMS ${hr 2}${font}
+${voffset 10}${color 00FFFF}Root Drive: ${fs_used /}/${fs_size /} 
+${voffset 5}${color1}${fs_bar 10,430 /}
+
+${voffset 20}${color 00FFFF}${font DejaVu Sans Mono:bold:size=16}NETWORK ${hr 2}${font}
+${voffset 10}${color 00FFFF}IP Address: ${addr wlan0} -- Replace wlan0 if needed
+${voffset 10}${color 00FFFF}Up:   ${upspeed wlan0} ${goto 220}${color1}${upspeedgraph wlan0 35,210 00FFFF 39FF14}
+${voffset 10}${color 00FFFF}Down: ${downspeed wlan0} ${goto 220}${color1}${downspeedgraph wlan0 35,210 00FFFF 39FF14}
+
+${voffset 25}${color 00FFFF}${font DejaVu Sans Mono:bold:size=16}TOP PROCESSES ${hr 2}${font}
+${voffset 10}${color 00FFFF}Name ${goto 180}PID ${goto 270}CPU% ${goto 360}MEM%
+${voffset 5}${color1}${top name 1} ${goto 180}${top pid 1} ${goto 270}${top cpu 1} ${goto 360}${top mem 1}
+${color1}${top name 2} ${goto 180}${top pid 2} ${goto 270}${top cpu 2} ${goto 360}${top mem 2}
+${color1}${top name 3} ${goto 180}${top pid 3} ${goto 270}${top cpu 3} ${goto 360}${top mem 3}
+${color1}${top name 4} ${goto 180}${top pid 4} ${goto 270}${top cpu 4} ${goto 360}${top mem 4}
+${color1}${top name 5} ${goto 180}${top pid 5} ${goto 270}${top cpu 5} ${goto 360}${top mem 5}
+]]

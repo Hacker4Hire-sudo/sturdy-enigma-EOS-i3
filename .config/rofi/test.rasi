@@ -1,0 +1,10 @@
+configuration {
+    font: "Noto Sans 12";
+}
+@theme "Arc-Dark"
+window {
+    width: 50%;
+    height: 50%;
+    location: center;
+    anchor: center;
+}

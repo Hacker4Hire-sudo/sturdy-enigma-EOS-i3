@@ -1,0 +1,49 @@
+model: gemini:gemini-3-flash-preview
+messages:
+- role: user
+  content: ffprobe -v error -show_entries stream=codec_type -of default=noprint_wrappers=1 facebook_full_video.mp4
+- role: assistant
+  content: |-
+    The command you provided is used to list the **types of streams** (video, audio, etc.) contained within the file `facebook_full_video.mp4`.
+
+    ### Breakdown of the command:
+    *   **`ffprobe`**: The command-line tool for analyzing multimedia files.
+    *   **`-v error`**: Hides all log output (headers, metadata) except for actual errors.
+    *   **`-show_entries stream=codec_type`**: Tells ffprobe to only display the `codec_type` field for each stream.
+    *   **`-of default=noprint_wrappers=1`**: Sets the output format to the default style, but removes the `[STREAM]` and `[/STREAM]` tags to make it cleaner.
+    *   **`facebook_full_video.mp4`**: The target file.
+
+    ---
+
+    ### Expected Output
+    If your video has one video track and one audio track, the output will look like this:
+    ```text
+    codec_type=video
+    codec_type=audio
+    ```
+
+    ---
+
+    ### Useful Variations
+
+    **1. To get just the values (e.g., `video`, `audio`) without the "codec_type=" prefix:**
+    Use the `nk=1` (no key) option:
+    ```bash
+    ffprobe -v error -show_entries stream=codec_type -of default=noprint_wrappers=1:nk=1 facebook_full_video.mp4
+    ```
+
+    **2. To see both the Type and the Name (e.g., `h264`, `aac`):**
+    ```bash
+    ffprobe -v error -show_entries stream=codec_type,codec_name -of default=noprint_wrappers=1 facebook_full_video.mp4
+    ```
+
+    **3. To get the output in JSON format (useful for scripts/programming):**
+    ```bash
+    ffprobe -v error -show_entries stream=codec_type -of json facebook_full_video.mp4
+    ```
+
+    **4. To count how many streams of each type there are:**
+    ```bash
+    ffprobe -v error -show_entries stream=codec_type -of default=noprint_wrappers=1:nk=1 facebook_full_video.mp4 | sort | uniq -c
+    ```
+    *Example output: `1 audio`, `1 video`.*
