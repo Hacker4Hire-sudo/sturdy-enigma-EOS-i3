@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# Dotfiles Installation Script
+# Dotfiles Installation Script (Updated for Comprehensive Configs)
 # ==============================================================================
 # This script creates symlinks from the dotfiles directory to their home targets
 # It will backup existing files by appending `.backup` to them.
@@ -13,8 +13,6 @@ echo -e "\e[1;36m[+] Starting Dotfiles Installation...\e[0m"
 mkdir -p "$BACKUP_DIR"
 
 # Function to link a file or directory
-# $1: Source path relative to DOTFILES_DIR
-# $2: Target path relative to HOME
 link_item() {
     local src="$DOTFILES_DIR/$1"
     local target="$HOME/$2"
@@ -22,6 +20,12 @@ link_item() {
 
     # Create target directory if it doesn't exist
     mkdir -p "$target_dir"
+
+    # Skip if source doesn't exist
+    if [ ! -e "$src" ]; then
+        echo -e "\e[1;31m[!] Source $1 does not exist. Skipping.\e[0m"
+        return
+    fi
 
     # Backup existing item if it's not a symlink pointing to our dotfiles
     if [ -e "$target" ] || [ -h "$target" ]; then
@@ -42,35 +46,52 @@ link_item() {
 link_item ".bashrc" ".bashrc"
 link_item ".profile" ".profile"
 
-# --- Configs ---
-link_item ".config/i3" ".config/i3"
-link_item ".config/picom" ".config/picom"
-link_item ".config/rofi" ".config/rofi"
+# --- Configs (Automatically link all dirs in .config) ---
+if [ -d "$DOTFILES_DIR/.config" ]; then
+    for dir in "$DOTFILES_DIR/.config/"*; do
+        if [ -d "$dir" ]; then
+            dirname=$(basename "$dir")
+            link_item ".config/$dirname" ".config/$dirname"
+        fi
+    done
+fi
 
 # --- Scripts ---
-link_item "scripts/config_launcher.sh" "scripts/config_launcher.sh"
+if [ -d "$DOTFILES_DIR/scripts" ]; then
+    for script in "$DOTFILES_DIR/scripts/"*; do
+        if [ -f "$script" ]; then
+            filename=$(basename "$script")
+            link_item "scripts/$filename" "scripts/$filename"
+            chmod +x "$HOME/scripts/$filename" 2>/dev/null
+        fi
+    done
+fi
 
 # --- Local Binaries ---
-mkdir -p "$HOME/.local/bin"
-for bin_file in "$DOTFILES_DIR/.local/bin/"*; do
-    if [ -f "$bin_file" ]; then
-        filename=$(basename "$bin_file")
-        link_item ".local/bin/$filename" ".local/bin/$filename"
-        chmod +x "$HOME/.local/bin/$filename"
-    fi
-done
+if [ -d "$DOTFILES_DIR/.local/bin" ]; then
+    mkdir -p "$HOME/.local/bin"
+    for bin_file in "$DOTFILES_DIR/.local/bin/"*; do
+        if [ -f "$bin_file" ]; then
+            filename=$(basename "$bin_file")
+            link_item ".local/bin/$filename" ".local/bin/$filename"
+            chmod +x "$HOME/.local/bin/$filename" 2>/dev/null
+        fi
+    done
+fi
 
 # --- AI Scripts ---
-mkdir -p "$HOME/AI"
-for ai_file in "$DOTFILES_DIR/AI/"*; do
-    if [ -f "$ai_file" ]; then
-        filename=$(basename "$ai_file")
-        link_item "AI/$filename" "AI/$filename"
-        if [[ "$filename" == *.sh ]]; then
-            chmod +x "$HOME/AI/$filename"
+if [ -d "$DOTFILES_DIR/AI" ]; then
+    mkdir -p "$HOME/AI"
+    for ai_file in "$DOTFILES_DIR/AI/"*; do
+        if [ -f "$ai_file" ]; then
+            filename=$(basename "$ai_file")
+            link_item "AI/$filename" "AI/$filename"
+            if [[ "$filename" == *.sh ]]; then
+                chmod +x "$HOME/AI/$filename" 2>/dev/null
+            fi
         fi
-    fi
-done
+    done
+fi
 
 echo -e "
 \e[1;32m[✓] Installation Complete!\e[0m"
