@@ -1,7 +1,7 @@
 #!/bin/bash
 USER="A1Jay5"
 PASS="362586"
-HOST="http://xxip9.top:8080"
+HOST="http://tv14s.xyz:8080"
 ID=$1
 [[ -z "$ID" ]] && exit 1
 RESPONSE=$(curl -s "${HOST}/player_api.php?username=${USER}&password=${PASS}&action=get_short_epg&stream_id=${ID}")

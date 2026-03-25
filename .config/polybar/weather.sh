@@ -1,62 +1,55 @@
 #!/bin/bash
 
 # Configuration
-LOCATION="Spring+Hill+Florida"
-UNITS="u" # Imperial (Fahrenheit)
+# Coordinates for Spring Hill, FL (found via Nominatim)
+LAT="28.4635"
+LON="-82.5363"
+# Weather.gov grid points for these coordinates
+GRID_ENDPOINT="https://api.weather.gov/gridpoints/TBW/66,120/forecast/hourly"
+USER_AGENT="Polybar-Weather-Script (Gemini-CLI)"
 
 # Fetch weather data
-# %S = Sunrise, %s = Sunset, %T = Local current time, %t = Temperature, %C = Condition
-weather_info=$(curl -s "wttr.in/${LOCATION}?format=%S+%s+%T+%t+%C&${UNITS}")
+weather_json=$(curl -s -H "User-Agent: $USER_AGENT" "$GRID_ENDPOINT")
 
-if [[ -z "$weather_info" || "$weather_info" == *"Error"* || "$weather_info" == *"Wait"* ]]; then
+if [[ -z "$weather_json" || "$weather_json" == *"error"* ]]; then
     echo "Weather Unavailable"
     exit 0
 fi
 
-# Parse components
-# Example output: 07:44:01 19:35:49 15:23:31-0400 +88°F Sunny
-sunrise=$(echo "$weather_info" | awk '{print $1}')
-sunset=$(echo "$weather_info" | awk '{print $2}')
-# Extract local time (strip timezone offset if present)
-local_time=$(echo "$weather_info" | awk '{print $3}' | sed 's/[-+].*//')
-temp=$(echo "$weather_info" | awk '{print $4}' | sed -E 's/[\+\-]//g; s/°[FC]/°/g')
-condition=$(echo "$weather_info" | cut -d' ' -f5-)
+# Parse components using jq
+# Extract the first period (current)
+current_period=$(echo "$weather_json" | jq -c '.properties.periods[0]' 2>/dev/null)
 
-# Helper to convert HH:MM:SS to seconds for comparison
-to_seconds() {
-    IFS=: read -r h m s <<< "$1"
-    # Use 10# to force base 10 (avoid octal issues with leading zeros)
-    echo $((10#$h * 3600 + 10#$m * 60 + 10#$s))
-}
-
-curr_sec=$(to_seconds "$local_time")
-rise_sec=$(to_seconds "$sunrise")
-set_sec=$(to_seconds "$sunset")
-
-if (( curr_sec >= rise_sec && curr_sec < set_sec )); then
-    is_day=true
-else
-    is_day=false
+if [[ -z "$current_period" || "$current_period" == "null" ]]; then
+    echo "Weather Unavailable"
+    exit 0
 fi
 
-# Icon Mapping (Font Awesome 6 Solid codes)
+is_day=$(echo "$current_period" | jq -r '.isDaytime')
+temp=$(echo "$current_period" | jq -r '.temperature')
+condition=$(echo "$current_period" | jq -r '.shortForecast')
+
+# Icon Mapping (Font Awesome 7 Solid codes as seen in config_pill.ini)
+# config_pill.ini uses font-1 = "Font Awesome 7 Free:style=Solid:size=14;4"
+# Icons used in original script:
 # Sun: \uf185, Moon: \uf186, Cloud: \uf0c2, Rain: \uf73d, Fog/Smog: \uf75f, Wind: \uf72e, Snowflake: \uf2dc, Cloud-Bolt: \uf76c
+
 case "$condition" in
-    "Clear" | "Sunny")
-        if [ "$is_day" = true ]; then
+    "Clear" | "Sunny" | "Mostly Sunny" | "Mostly Clear")
+        if [ "$is_day" = "true" ]; then
             icon=$(printf "\uF185") # sun
         else
             icon=$(printf "\uF186") # moon
         fi
         ;;
-    "Partly cloudy")
-        if [ "$is_day" = true ]; then
+    "Partly Cloudy" | "Partly Sunny" | "Scattered Clouds")
+        if [ "$is_day" = "true" ]; then
             icon=$(printf "\uF6C4") # cloud-sun
         else
             icon=$(printf "\uF6C3") # cloud-moon
         fi
         ;;
-    "Cloudy" | "Overcast" | "Mostly cloudy")
+    "Cloudy" | "Overcast" | "Mostly Cloudy")
         icon=$(printf "\uF0C2") # cloud
         ;;
     *"Rain"* | *"Showers"* | *"Drizzle"*)
@@ -76,7 +69,7 @@ case "$condition" in
         ;;
     *)
         # Fallback
-        if [ "$is_day" = true ]; then
+        if [ "$is_day" = "true" ]; then
             icon=$(printf "\uF185")
         else
             icon=$(printf "\uF186")
@@ -84,4 +77,4 @@ case "$condition" in
         ;;
 esac
 
-echo "$icon $temp"
+echo "$icon ${temp}°F"

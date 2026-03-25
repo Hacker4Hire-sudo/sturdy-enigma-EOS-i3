@@ -153,3 +153,4 @@ alias tv='xfce4-terminal --title "Fred TV" --command "/home/hacker4hire/.config/
 alias upgrade-gemini='sudo npm install -g @google/gemini-cli@latest'
 source ~/.bash_brain
 export BROWSER=google-chrome-stable
+export GOOGLE_API_KEY="AIzaSyBKXbkvjmu89MIfjyYq5ai22nkI57Xifxs"

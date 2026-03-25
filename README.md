@@ -1,6 +1,6 @@
 # 💻 Arch / i3 Hacking Station Dotfiles
 
-Welcome to the **Hacking Station** configuration repository. This is a highly optimized, lean, and mean dotfiles setup tailored for an EndeavourOS / Arch Linux environment running the i3 window manager with 4GB of RAM.
+Welcome to the **Hacking Station** configuration repository. This is a highly optimized, lean, and mean dotfiles setup tailored for an EndeavourOS / Arch Linux environment running the i3 window manager with 32GB of RAM.
 
 ## 🖼️ Screenshots
 

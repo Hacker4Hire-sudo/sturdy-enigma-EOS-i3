@@ -1,26 +1,32 @@
 #!/bin/bash
-# Hacking-Station Context Sync V5 (The Hammer)
+# Hacking-Station Context Sync V6 (2026 High-Performance)
+# Purpose: Deep Context Injection for local AI (Qwen)
 
 USER_PROMPT="$1"
-BASHRC=$(cat ~/.bashrc 2>/dev/null)
-BIBLE_FUNC=$(cat ~/bible_functions.sh 2>/dev/null)
-I3_CONF=$(cat ~/.config/i3/config 2>/dev/null)
+[ -z "$USER_PROMPT" ] && { echo "Usage: sync_context <prompt>"; exit 1; }
 
-# Construct the payload
-PAYLOAD="CONTEXT INITIALIZATION: You are the Hacking-Station AI.
-I am providing my actual system files below. Index them and use them to answer the user request at the very end.
+# Context Gathering (Minimized for Efficiency)
+BASHRC=$(grep -vE '^#|^$' ~/.bashrc | tail -n 50)
+BIBLE_FUNC=$(grep -vE '^#|^$' ~/bible_functions.sh 2>/dev/null)
+I3_CONF=$( [ -f ~/.config/i3/config ] && grep -vE '^#|^$' ~/.config/i3/config | tail -n 50 || echo "i3 config not found" )
 
-FILE: .bashrc
+# Construct the System Matrix
+read -r -d '' PAYLOAD << EOM
+SYSTEM: You are the Hacking-Station AI / Architect. 
+USER: Brother Rodney.
+ENV: EndeavourOS i3wm (32GB RAM).
+CONTEXT:
+--- .bashrc (Active) ---
 $BASHRC
-
-FILE: bible_functions.sh
+--- bible_functions.sh ---
 $BIBLE_FUNC
-
-FILE: i3_config
+--- i3/config (Partial) ---
 $I3_CONF
 
-USER REQUEST FOR BROTHER RODNEY:
-$USER_PROMPT"
+RODNEY'S REQUEST: $USER_PROMPT
+INSTRUCTION: Be concise, technical, and architectural.
+EOM
 
-# Send the whole payload as a single argument
+# Execute Sync with Qwen
+echo -e "\e[1;36m[HAMMER SYNCING WITH ARCHITECT...]\e[0m"
 ollama run qwen2.5-coder:1.5b "$PAYLOAD"

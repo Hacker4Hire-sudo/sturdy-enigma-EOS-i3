@@ -13,5 +13,6 @@ export HWMON_PATH=$(find /sys/devices/platform/coretemp.0/hwmon -name temp1_inpu
 polybar left -c ~/.config/polybar/config_pill.ini &
 polybar stats -c ~/.config/polybar/config_pill.ini &
 polybar weather -c ~/.config/polybar/config_pill.ini &
+polybar apps -c ~/.config/polybar/config_pill.ini &
 polybar center -c ~/.config/polybar/config_pill.ini &
 polybar right -c ~/.config/polybar/config_pill.ini &

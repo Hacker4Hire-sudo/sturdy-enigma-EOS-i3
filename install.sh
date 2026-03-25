@@ -45,6 +45,8 @@ link_item() {
 # --- Core Files ---
 link_item ".bashrc" ".bashrc"
 link_item ".profile" ".profile"
+link_item "bible_functions.sh" "bible_functions.sh"
+link_item "scripts/guard.sh" "guard.sh"
 
 # --- Configs (Automatically link all dirs in .config) ---
 if [ -d "$DOTFILES_DIR/.config" ]; then

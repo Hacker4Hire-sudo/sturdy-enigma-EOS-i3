@@ -1,0 +1,18 @@
+#!/bin/bash
+# --- Hacking-Station i3-temp (Precision Monitoring) ---
+TEMP=$(sensors 2>/dev/null | grep "Core 0" | awk '{print $3}' | tr -d '+')
+if [ -n "$TEMP" ]; then
+    echo "🌡️ $TEMP"
+    echo "$TEMP"
+    # Color logic: Red if > 70°C, Yellow if > 60°C, Cyan otherwise
+    VALUE=$(echo "$TEMP" | cut -d. -f1)
+    if [ "$VALUE" -gt 70 ]; then
+        echo "#ff5555"
+    elif [ "$VALUE" -gt 60 ]; then
+        echo "#f1fa8c"
+    else
+        echo "#8be9fd"
+    fi
+else
+    echo "🌡️ N/A"
+fi

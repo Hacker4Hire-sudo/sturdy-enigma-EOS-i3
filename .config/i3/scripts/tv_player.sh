@@ -24,6 +24,7 @@ echo "URL: $STREAM_URL" >> "$LOGFILE"
 # Hardened Live-Stream Flags
 FLAGS=(
     "--user-agent=TiviMate/5.1.0 (Linux; Android 12)"
+    "--no-ytdl"
     "--network-timeout=90"
     "--cache=yes"
     "--demuxer-max-bytes=640MiB"
